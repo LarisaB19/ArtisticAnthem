@@ -1,22 +1,49 @@
 package com.example.artisticanthem
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
-import com.example.artisticanthem.ui.theme.Red
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun SettingsScreen() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier.fillMaxSize().align(Alignment.Center),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "Settings", fontSize = 30.sp, color = Red)
-        }
+    var isDarkTheme by remember { mutableStateOf(false) }
+    var notificationsEnabled by remember { mutableStateOf(true) }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Settings", style = MaterialTheme.typography.headlineMedium)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        SettingItemSwitch(
+            label = "Dark Theme",
+            checked = isDarkTheme,
+            onCheckedChange = { isDarkTheme = it }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        SettingItemSwitch(
+            label = "Enable Notifications",
+            checked = notificationsEnabled,
+            onCheckedChange = { notificationsEnabled = it }
+        )
+    }
+}
+
+@Composable
+fun SettingItemSwitch(
+    label: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(label)
+        Spacer(modifier = Modifier.weight(1f))
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange
+        )
     }
 }

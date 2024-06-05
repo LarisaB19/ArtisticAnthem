@@ -20,6 +20,8 @@ import com.example.artisticanthem.ui.theme.Red
 
 @Composable
 fun HomeScreen(onNavigate: (String) -> Unit) {
+    val searchButtonColor = MaterialTheme.colorScheme.primary // Definirea culorii butonului de căutare
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -39,7 +41,7 @@ fun HomeScreen(onNavigate: (String) -> Unit) {
             )
 
             Image(
-                painter = painterResource(id = R.drawable.poetry_image), // Add your image resource
+                painter = painterResource(id = R.drawable.poetry_image), // Adaugă resursa imaginii
                 contentDescription = "Poetry Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -51,18 +53,19 @@ fun HomeScreen(onNavigate: (String) -> Unit) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            NavigationButton("Search") { onNavigate("search") }
+            NavigationButton("Search", buttonColor = searchButtonColor) { onNavigate("search") } // Aplicarea culorii butonului de căutare
         }
     }
 }
 
 @Composable
-fun NavigationButton(text: String, onClick: () -> Unit) {
+fun NavigationButton(text: String, buttonColor: Color, onClick: () -> Unit) {
     Button(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .padding(vertical = 8.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = buttonColor) // Aplicarea culorii butonului
     ) {
         Text(text = text)
     }

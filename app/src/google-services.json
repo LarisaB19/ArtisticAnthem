@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "626991162684",
+    "project_id": "artisticanthem-e134e",
+    "storage_bucket": "artisticanthem-e134e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:626991162684:android:06232fd841debef20caa39",
+        "android_client_info": {
+          "package_name": "com.example.artisticanthem"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdXtkp_LOq0bHyVQoH1WNw9i7SaQ0RfuE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

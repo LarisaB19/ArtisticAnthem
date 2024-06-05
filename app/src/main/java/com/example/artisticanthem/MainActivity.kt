@@ -1,35 +1,30 @@
 package com.example.artisticanthem
 
+import SearchScreen
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.artisticanthem.api.PoemResponse
 import com.example.artisticanthem.ui.theme.ArtisticAnthemTheme
 import com.example.artisticanthem.ui.theme.Red
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
-import androidx.navigation.navOptions
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +41,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -153,6 +149,40 @@ fun NavDrawer() {
                             }
                         }
                     })
+                NavigationDrawerItem(label = { Text(text = "Login", color = Red) },
+                    selected = false,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Home,  // Choose an appropriate icon
+                            contentDescription = "Login",
+                            tint = Red
+                        )
+                    },
+                    onClick = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                            navigationController.navigate(Screens.LoginScreen.screen) {
+                                popUpTo(Screens.LoginScreen.screen) { inclusive = true }
+                            }
+                        }
+                    })
+                NavigationDrawerItem(label = { Text(text = "Register", color = Red) },
+                    selected = false,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Home,  // Choose an appropriate icon
+                            contentDescription = "Register",
+                            tint = Red
+                        )
+                    },
+                    onClick = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                            navigationController.navigate(Screens.RegisterScreen.screen) {
+                                popUpTo(Screens.RegisterScreen.screen) { inclusive = true }
+                            }
+                        }
+                    })
             }
         },
     ) {
@@ -177,19 +207,42 @@ fun NavDrawer() {
                         }
                     },
                 )
-            }
-        ) {
-            NavHost(navController = navigationController,
-                startDestination = Screens.HomeScreen.screen
-            ) {
-                composable(Screens.HomeScreen.screen) {
-                    HomeScreen(onNavigate = { navigationController.navigate(Screens.SearchScreen.screen) })
+            },
+            content = { innerPadding ->
+                Box(modifier = Modifier.padding(innerPadding)) {
+                    NavHost(navController = navigationController,
+                        startDestination = Screens.HomeScreen.screen
+                    ) {
+                        composable(Screens.HomeScreen.screen) {
+                            HomeScreen(onNavigate = { navigationController.navigate(Screens.SearchScreen.screen) })
+                        }
+                        composable(Screens.InfoScreen.screen) { InfoScreen() }
+                        composable(Screens.SettingsScreen.screen) { SettingsScreen() }
+                        composable(Screens.SearchScreen.screen) { SearchScreen(navController = navigationController) }
+                        composable(Screens.FavoriteScreen.screen) { FavoriteScreen() }
+                        composable(Screens.LoginScreen.screen) {
+                            LoginScreen(
+                                onLoginSuccess = { navigationController.navigate(Screens.HomeScreen.screen) },
+                                onRegisterClick = { navigationController.navigate(Screens.RegisterScreen.screen) }
+                            )
+                        }
+                        composable(Screens.RegisterScreen.screen) {
+                            RegisterScreen(
+                                onRegisterSuccess = { navigationController.navigate(Screens.HomeScreen.screen) },
+                                onLoginClick = { navigationController.popBackStack() }
+                            )
+                        }
+                        composable(
+                            route = "details/{poem}",
+                            arguments = listOf(navArgument("poem") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val json = backStackEntry.arguments?.getString("poem")
+                            val poem = Gson().fromJson(json, PoemResponse::class.java)
+                            PoetryDetailsScreen(poetry = poem)
+                        }
+                    }
                 }
-                composable(Screens.InfoScreen.screen) { InfoScreen() }
-                composable(Screens.SettingsScreen.screen) { SettingsScreen() }
-                composable(Screens.SearchScreen.screen) { SearchScreen() }
-                composable(Screens.FavoriteScreen.screen) { FavoriteScreen() }
             }
-        }
+        )
     }
 }
