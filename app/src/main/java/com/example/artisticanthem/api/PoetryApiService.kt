@@ -4,6 +4,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface PoetryApiService {
+    //https://poetrydb.org/author,poemcount/Dickinson;5
     @GET("api/poems")
     suspend fun getPoemsByAuthor(
         @Query("input_field") inputField: String = "author",
