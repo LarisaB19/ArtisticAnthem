@@ -21,7 +21,7 @@ interface PoetryApiService {
         @Query("output_field") outputField: String = "author,title",
         @Query("format") format: String = "json"
     ): List<PoemResponse>
-
+//https://poetrydb.org/title/{variabila}
     @GET("api/poems")
     suspend fun searchPoem(
         @Query("input_field") inputField: String,
